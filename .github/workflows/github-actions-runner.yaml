@@ -12,19 +12,21 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       IMAGE_NAME: github-actions-runner
-      IMAGE_TAGS: latest v1
     
     if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v2
+
+    - name: Read upstream tag
+      id: gettag
+      run: echo "::set-output name=tag::$(head -n 1 github-actions-runner/Dockerfile | awk -F':' '{print $2}')"
 
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ env.IMAGE_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
-        base-image: some_image
+        tags: latest ${{ steps.gettag.outputs.tag }}
         dockerfiles: |
           ./github-actions-runner/Dockerfile
 
