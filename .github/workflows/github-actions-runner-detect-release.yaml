@@ -20,7 +20,7 @@ jobs:
           RELEASE_NO: ${{ steps.getrelease.outputs.release_tag }}
           CURRENT_VERSION: ${{ steps.getversion.outputs.version }}
         run: |
-          sed -i "s/ARG RUNNER_VERSION=$CURRENT_VERSION/ARG RUNNER VERSION=$RELEASE_NO/" github-actions-runner/Dockerfile  
+          sed -i "s/ARG RUNNER_VERSION=$CURRENT_VERSION/ARG RUNNER_VERSION=$RELEASE_NO/" github-actions-runner/Dockerfile  
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
