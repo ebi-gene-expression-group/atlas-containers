@@ -1,0 +1,6 @@
+[submodule "scxa-solrcloud/index-bioentities"]
+	path = scxa-solrcloud/index-bioentities
+	url = https://github.com/ebi-gene-expression-group/index-bioentities.git
+[submodule "scxa-solrcloud/index-scxa"]
+	path = scxa-solrcloud/index-scxa
+	url = https://github.com/ebi-gene-expression-group/index-scxa.git
