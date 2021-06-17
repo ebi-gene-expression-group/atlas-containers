@@ -15,7 +15,7 @@ jobs:
     env:
       IMAGE_NAME: ensembl-update-env
 
-    if: contains( 'refs/head/feature/', github_ref )
+    if: contains( 'refs/head/feature/', github.ref )
     steps:
     - uses: actions/checkout@v2
 
