@@ -5,6 +5,8 @@ on:
     paths:
       - "ensembl-update/Dockerfile"
       - "ensembl-update/tag"
+      - ".github/workflows/ens_update_env_container.yaml"
+
 
 jobs:
   test:
@@ -13,7 +15,7 @@ jobs:
     env:
       IMAGE_NAME: ensembl-update-env
 
-    if: github.ref == 'refs/head/feature/**'
+    if: conatains( 'refs/head/feature/', github_ref )
     steps:
     - uses: actions/checkout@v2
 
@@ -36,7 +38,7 @@ jobs:
     env:
       IMAGE_NAME: ensembl-update-env
 
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v2
 
