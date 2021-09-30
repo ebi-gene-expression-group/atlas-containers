@@ -22,6 +22,7 @@ jobs:
         run: |
           sed -i "s/ARG RUNNER_VERSION=$CURRENT_VERSION/ARG RUNNER_VERSION=$RELEASE_NO/" github-actions-runner/Dockerfile  
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: Update actions runner to ${{ steps.getrelease.outputs.release_tag }}
@@ -36,3 +37,11 @@ jobs:
           labels: dependencies, automated pr
           branch: actions-runner-updates
           reviewers: pinin4fjords,pcm32
+
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
