@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "atlas-schemas-base/*"
+      - .github/workflows/miniconda_template.yaml
 
 jobs:
   test:
@@ -62,7 +63,7 @@ jobs:
         tags: latest ${{ steps.gettagver.outputs.tag_version }}
         context: atlas-schemas-base
         dockerfiles: |
-          ./atlas-schemas-base/Dockerfile
+          Dockerfile
 
     - name: Push to Quay
       id: push-to-quay
