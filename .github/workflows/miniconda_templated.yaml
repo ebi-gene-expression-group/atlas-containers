@@ -1,0 +1,78 @@
+name: Build and Push miniconda templated containers
+
+on:
+  push:
+    paths:
+      - "atlas-schemas-base/*"
+
+jobs:
+  test:
+    name: Build image
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: ensembl-update-env
+
+    if: startsWith( github.ref, 'refs/heads/feature/' )
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Read tag
+      id: gettag
+      run: echo "::set-output name=tag::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+
+    - name: Read tag_version
+      id: gettagver
+      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+
+    - name: Assemble Dockerfile
+      run: bash miniconda_template/create_dockerfile.sh atlas-schemas-base
+
+    - name: Build image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ steps.gettag.outputs.tag }}
+        tags: latest ${{ steps.gettagver.outputs.tag_version }}
+        dockerfiles: |
+          ./atlas-schemas-base/Dockerfile
+
+  deploy:
+    name: Build and deploy image to quay.io/ebigxa
+    runs-on: ubuntu-20.04
+
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Read tag
+      id: gettag
+      run: echo "::set-output name=tag::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+
+    - name: Read tag_version
+      id: gettagver
+      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+
+    - name: Assemble Dockerfile
+      run: bash miniconda_template/create_dockerfile.sh atlas-schemas-base
+
+    - name: Build image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ steps.gettag.outputs.tag }}
+        tags: latest ${{ steps.gettagver.outputs.tag_version }}
+        dockerfiles: |
+          ./atlas-schemas-base/Dockerfile
+
+    - name: Push to Quay
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.gettag.outputs.tag }}
+        tags: latest ${{ steps.gettagver.outputs.tag_version }}
+        registry: quay.io/ebigxa
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_TOKEN }}
+
+    - name: Use the image
+      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
