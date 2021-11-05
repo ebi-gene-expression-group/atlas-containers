@@ -34,7 +34,7 @@ jobs:
         tags: latest ${{ steps.gettagver.outputs.tag_version }}
         context: atlas-schemas-base
         dockerfiles: |
-          Dockerfile
+          ./atlas-schemas-base/Dockerfile
 
   deploy:
     name: Build and deploy image to quay.io/ebigxa
@@ -63,7 +63,7 @@ jobs:
         tags: latest ${{ steps.gettagver.outputs.tag_version }}
         context: atlas-schemas-base
         dockerfiles: |
-          Dockerfile
+          ./atlas-schemas-base/Dockerfile
 
     - name: Push to Quay
       id: push-to-quay
