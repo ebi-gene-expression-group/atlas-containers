@@ -25,7 +25,7 @@ jobs:
       run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
 
     - name: Assemble Dockerfile
-      run: ./miniconda_template/create_dockerfile.sh atlas-schemas-base
+      run: miniconda_template/create_dockerfile.sh atlas-schemas-base
 
     - name: Build image
       id: build-image
@@ -53,7 +53,7 @@ jobs:
       run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
 
     - name: Assemble Dockerfile
-      run: ./miniconda_template/create_dockerfile.sh atlas-schemas-base
+      run: miniconda_template/create_dockerfile.sh atlas-schemas-base
 
     - name: Build image
       id: build-image
