@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "atlas-schemas-base/*"
-      - .github/workflows/miniconda_template.yaml
+      - ".github/workflows/miniconda_template.yaml"
 
 jobs:
   test:
