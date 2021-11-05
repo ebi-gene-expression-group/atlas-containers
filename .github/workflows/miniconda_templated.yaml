@@ -9,8 +9,6 @@ jobs:
   test:
     name: Build image
     runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: ensembl-update-env
 
     if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
@@ -33,8 +31,9 @@ jobs:
       with:
         image: ${{ steps.gettag.outputs.tag }}
         tags: latest ${{ steps.gettagver.outputs.tag_version }}
+        context: atlas-schemas-base
         dockerfiles: |
-          ./atlas-schemas-base/Dockerfile
+          Dockerfile
 
   deploy:
     name: Build and deploy image to quay.io/ebigxa
@@ -61,6 +60,7 @@ jobs:
       with:
         image: ${{ steps.gettag.outputs.tag }}
         tags: latest ${{ steps.gettagver.outputs.tag_version }}
+        context: atlas-schemas-base
         dockerfiles: |
           ./atlas-schemas-base/Dockerfile
 
