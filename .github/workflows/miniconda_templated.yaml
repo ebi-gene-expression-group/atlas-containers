@@ -20,7 +20,7 @@ jobs:
 
     - name: Read tag_version
       id: gettagver
-      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $2 }' )"
 
     - name: Assemble Dockerfile
       run: miniconda_template/create_dockerfile.sh atlas-schemas-base
@@ -49,7 +49,7 @@ jobs:
 
     - name: Read tag_version
       id: gettagver
-      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $1 }' )"
+      run: echo "::set-output name=tag_version::$(head -n 1 atlas-schemas-base/tag | awk -F':' '{ print $2 }' )"
 
     - name: Assemble Dockerfile
       run: miniconda_template/create_dockerfile.sh atlas-schemas-base
