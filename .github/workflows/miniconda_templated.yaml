@@ -8,6 +8,8 @@ on:
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"
+    branches:
+      - master
   pull_request:
     paths:
       - "*/env.yaml"
@@ -15,6 +17,9 @@ on:
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"
+    branches:
+      - '*'
+      - '!master'
 
 jobs:
   getchanges:
