@@ -38,14 +38,10 @@ jobs:
             awk -F'/' '{ print $1 }' | sort -u | \
             awk 'system("test -f "$1"/env.yaml")==0 { print $1 }' | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' )
-          # | { changed: . }
           echo ::set-output name=changeddirsjson::"$CHANGED_DIRS_JSON"
-          # echo ::set-output name=explicitjson::'"changed": ["atlas-index-base", "atlas-schemas-base"]'
       - name: Print changed directories with miniconda based containers
         run: |
           echo ${{steps.changes.outputs.changeddirsjson}}
-          echo ${{fromJSON(steps.changes.outputs.changeddirsjson)}}
-          echo ${{steps.changes.outputs.explicitjson}}
     outputs:
       changeddirs: ${{ steps.changes.outputs.changeddirsjson }}
 
@@ -58,7 +54,7 @@ jobs:
       matrix:
         changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
 
-    # if: startsWith( github.ref, 'refs/heads/feature/' )
+    if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
     - uses: actions/checkout@v2
 
