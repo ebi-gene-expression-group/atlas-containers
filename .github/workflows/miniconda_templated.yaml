@@ -8,6 +8,13 @@ on:
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"
+  pull_request:
+    paths:
+      - "*/env.yaml"
+      - "*/image_tag"
+      - "*/post_install_dockerfile"
+      - "miniconda_template/*"
+      - ".github/workflows/miniconda_template.yaml"
 
 jobs:
   get_changes:
@@ -16,14 +23,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v11.5
-        with:
-          since_last_remote_commit: 'true'
+        #with:
+          #since_last_remote_commit: 'true'
           # sha: ${{ github.event.pull_request.head.sha }}
 
       - name: Changed base directories for u-mamba based containers
