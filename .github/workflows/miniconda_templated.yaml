@@ -29,8 +29,6 @@ jobs:
         uses: tj-actions/changed-files@v11.5
         with:
           separator: ','
-          #since_last_remote_commit: 'true'
-          # sha: ${{ github.event.pull_request.head.sha }}
       - name: Changed base directories for u-mamba based containers
         id: changes
         run: |
