@@ -57,18 +57,13 @@ jobs:
     strategy:
       matrix:
         changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
-        # ${{fromJSON(needs.getchanges.outputs.explicit)}}
 
     # if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
     - uses: actions/checkout@v2
 
     - name: Check matrix
-      run: |
-        echo ${{ needs.getchanges.outputs.changeddirs }}
-        echo ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
-        echo ${{fromJSON(needs.getchanges.outputs.explicit)}}
-        echo ${{ matrix.changed }}
+      run: echo ${{ matrix.changed }}
 
     - name: Read image
       id: gettag
@@ -97,7 +92,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        changed: ${{fromJSON(needs.getchanges.outputs.changed_dirs_json)}}
+        changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
 
     if: github.ref == 'refs/heads/master'
     steps:
