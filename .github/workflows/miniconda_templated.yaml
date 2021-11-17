@@ -39,7 +39,16 @@ jobs:
             awk -F'/' '{ print $1 }' | sort -u | \
             awk 'system("test -f "$1"/env.yaml")==0 { print $1 }' | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' )
+          FIRST_AWK=$(echo ${{ steps.changed-files.outputs.all_changed_and_modified_files }} | \
+            awk '{ if ( $0 ~ /\// ) { print $1 } }')
+          SECOND_AWK_SORT=$(echo $FIRST_AWK | awk -F'/' '{ print $1 }' | sort -u )
+          TEST_FILE=$(echo $SECOND_AWK_SORT | awk 'system("test -f "$1"/env.yaml")==0 { print $1 }')
+          JQ_FINAL=$(echo $TEST_FILE | jq -R -s -c 'split("\n") | map(select(length > 0))' )
           echo "::set-output name=changed_dirs_json::$CHANGED_DIRS_JSON"
+          echo "First: $FIRST_AWK"
+          echo "Second: $SECOND_AWK_SORT"
+          echo "Third: $TEST_FILE"
+          echo "Fourth: $JQ_FINAL"
 
       - name: Print changed directories with miniconda based containers
         run: echo ${{ steps.changes.outputs.changed_dirs_json }}
