@@ -17,16 +17,11 @@ on:
       - ".github/workflows/miniconda_template.yaml"
 
 jobs:
-  get_changes:
+  getchanges:
     name: Get changed repos
     runs-on: ubuntu-20.04
-    outputs:
-      changed_dirs: ${{ steps.changes.outputs.changed_dirs_json }}
-
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v11.5
@@ -34,7 +29,6 @@ jobs:
           separator: ','
           #since_last_remote_commit: 'true'
           # sha: ${{ github.event.pull_request.head.sha }}
-
       - name: Changed base directories for u-mamba based containers
         id: changes
         run: |
@@ -44,39 +38,48 @@ jobs:
             awk -F'/' '{ print $1 }' | sort -u | \
             awk 'system("test -f "$1"/env.yaml")==0 { print $1 }' | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' )
-          echo "::set-output name=changed_dirs_json::$CHANGED_DIRS_JSON"
-
+          # | { changed: . }
+          echo ::set-output name=changeddirsjson::"$CHANGED_DIRS_JSON"
+          # echo ::set-output name=explicitjson::'"changed": ["atlas-index-base", "atlas-schemas-base"]'
       - name: Print changed directories with miniconda based containers
-        run: echo ${{ steps.changes.outputs.changed_dirs_json }}
+        run: |
+          echo ${{steps.changes.outputs.changeddirsjson}}
+          echo ${{fromJSON(steps.changes.outputs.changeddirsjson)}}
+          echo ${{steps.changes.outputs.explicitjson}}
+    outputs:
+      changeddirs: ${{ steps.changes.outputs.changeddirsjson }}
 
 
   test:
     name: Build image
     runs-on: ubuntu-20.04
-    needs: get_changes
+    needs: getchanges
     strategy:
       matrix:
-        changed_umamba_dir: ${{fromJSON(needs.get_changes.outputs.changed_dirs)}}
+        changed: ${{needs.getchanges.outputs.changeddirs}}
+        # ${{fromJSON(needs.getchanges.outputs.explicit)}}
 
-    if: startsWith( github.ref, 'refs/heads/feature/' )
+    # if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
     - uses: actions/checkout@v2
 
     - name: Check matrix
       run: |
-        echo ${{ needs.get_changes.outputs.changed_dirs }}
-        echo ${{ matrix.changed_umamba_dir }}
+        echo ${{ needs.getchanges.outputs.changeddirs }}
+        echo ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
+        echo ${{fromJSON(needs.getchanges.outputs.explicit)}}
+        echo ${{ matrix.changed }}
 
     - name: Read image
       id: gettag
-      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed_umamba_dir }}/image_tag | awk -F':' '{ print $1 }' )"
+      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $1 }' )"
 
     - name: Read tag
       id: gettagver
-      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed_umamba_dir }}/image_tag | awk -F':' '{ print $2 }' )"
+      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $2 }' )"
 
     - name: Assemble Dockerfile
-      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed_umamba_dir }}
+      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
 
     - name: Build image
       id: build-image
@@ -84,17 +87,17 @@ jobs:
       with:
         image: ${{ steps.gettag.outputs.image }}
         tags: latest ${{ steps.gettagver.outputs.tag }}
-        context: ${{ matrix.changed_umamba_dir }}
+        context: ${{ matrix.changed }}
         dockerfiles: |
-          ./${{ matrix.changed_umamba_dir }}/Dockerfile
+          ./${{ matrix.changed }}/Dockerfile
 
   deploy:
-    needs: get_changes
+    needs: getchanges
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        changed_umamba_dir: ${{fromJSON(needs.get_changes.outputs.changed_dirs_json)}}
+        changed: ${{fromJSON(needs.getchanges.outputs.changed_dirs_json)}}
 
     if: github.ref == 'refs/heads/master'
     steps:
@@ -102,14 +105,14 @@ jobs:
 
     - name: Read image
       id: gettag
-      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed_umamba_dir }}/image_tag | awk -F':' '{ print $1 }' )"
+      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $1 }' )"
 
     - name: Read tag
       id: gettagver
-      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed_umamba_dir }}/image_tag | awk -F':' '{ print $2 }' )"
+      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $2 }' )"
 
     - name: Assemble Dockerfile
-      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed_umamba_dir }}
+      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
 
     - name: Build image
       id: build-image
@@ -117,9 +120,9 @@ jobs:
       with:
         image: ${{ steps.gettag.outputs.image }}
         tags: latest ${{ steps.gettagver.outputs.tag }}
-        context: ${{ matrix.changed_umamba_dir }}
+        context: ${{ matrix.changed }}
         dockerfiles: |
-          ./${{ matrix.changed_umamba_dir }}/Dockerfile
+          ./${{ matrix.changed }}/Dockerfile
 
     - name: Push to Quay
       id: push-to-quay
