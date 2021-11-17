@@ -56,7 +56,7 @@ jobs:
     needs: getchanges
     strategy:
       matrix:
-        changed: ${{needs.getchanges.outputs.changeddirs}}
+        changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
         # ${{fromJSON(needs.getchanges.outputs.explicit)}}
 
     # if: startsWith( github.ref, 'refs/heads/feature/' )
