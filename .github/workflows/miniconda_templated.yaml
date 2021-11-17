@@ -59,7 +59,7 @@ jobs:
       matrix:
         changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
 
-    if: startsWith( github.ref, 'refs/heads/feature/' )
+    #if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
     - uses: actions/checkout@v2
 
@@ -95,7 +95,7 @@ jobs:
       matrix:
         changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
 
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v2
 
