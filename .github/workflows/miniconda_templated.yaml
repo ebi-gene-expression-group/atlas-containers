@@ -17,9 +17,6 @@ on:
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"
-    branches:
-      - '*'
-      - '!master'
 
 jobs:
   getchanges:
