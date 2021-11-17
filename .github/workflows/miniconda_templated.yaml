@@ -20,6 +20,9 @@ jobs:
   get_changes:
     name: Get changed repos
     runs-on: ubuntu-20.04
+    outputs:
+      changed_dirs: ${{ steps.changes.outputs.changed_dirs_json }}
+
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +30,8 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v11.5
-        #with:
+        with:
+          separator: ','
           #since_last_remote_commit: 'true'
           # sha: ${{ github.event.pull_request.head.sha }}
 
@@ -35,36 +39,33 @@ jobs:
         id: changes
         run: |
           CHANGED_DIRS_JSON=$(echo ${{ steps.changed-files.outputs.all_changed_and_modified_files }} | \
+            tr ',' '\n' | \
             awk '{ if ( $0 ~ /\// ) { print $1 } }' | \
             awk -F'/' '{ print $1 }' | sort -u | \
             awk 'system("test -f "$1"/env.yaml")==0 { print $1 }' | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' )
-          FIRST_AWK=$(echo ${{ steps.changed-files.outputs.all_changed_and_modified_files }} | \
-            awk '{ if ( $0 ~ /\// ) { print $1 } }')
-          SECOND_AWK_SORT=$(echo $FIRST_AWK | awk -F'/' '{ print $1 }' | sort -u )
-          TEST_FILE=$(echo $SECOND_AWK_SORT | awk 'system("test -f "$1"/env.yaml")==0 { print $1 }')
-          JQ_FINAL=$(echo $TEST_FILE | jq -R -s -c 'split("\n") | map(select(length > 0))' )
           echo "::set-output name=changed_dirs_json::$CHANGED_DIRS_JSON"
-          echo "First: $FIRST_AWK"
-          echo "Second: $SECOND_AWK_SORT"
-          echo "Third: $TEST_FILE"
-          echo "Fourth: $JQ_FINAL"
 
       - name: Print changed directories with miniconda based containers
         run: echo ${{ steps.changes.outputs.changed_dirs_json }}
 
 
   test:
-    needs: get_changes
     name: Build image
     runs-on: ubuntu-20.04
+    needs: get_changes
     strategy:
       matrix:
-        changed_umamba_dir: ${{fromJSON(needs.get_changes.outputs.changed_dirs_json)}}
+        changed_umamba_dir: ${{fromJSON(needs.get_changes.outputs.changed_dirs)}}
 
     if: startsWith( github.ref, 'refs/heads/feature/' )
     steps:
     - uses: actions/checkout@v2
+
+    - name: Check matrix
+      run: |
+        echo ${{ needs.get_changes.outputs.changed_dirs }}
+        echo ${{ matrix.changed_umamba_dir }}
 
     - name: Read image
       id: gettag
