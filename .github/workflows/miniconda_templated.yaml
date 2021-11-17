@@ -34,7 +34,7 @@ jobs:
           echo "::set-output name=changed_dirs_json::$CHANGED_DIRS_JSON"
 
       - name: Print changed directories with miniconda based containers
-        run: echo ${{ step.changes.outputs.changed_dirs_json }}
+        run: echo ${{ steps.changes.outputs.changed_dirs_json }}
 
 
   test:
