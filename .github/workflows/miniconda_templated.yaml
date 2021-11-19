@@ -55,7 +55,6 @@ jobs:
     name: Build image
     runs-on: ubuntu-20.04
     needs: getchanges
-    if: startsWith( github.ref, 'refs/heads/feature/' )
     strategy:
       matrix:
         changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
@@ -85,6 +84,17 @@ jobs:
         context: ${{ matrix.changed }}
         dockerfiles: |
           ./${{ matrix.changed }}/Dockerfile
+
+    - name: Push to Quay
+      if: ${{ github.ref == 'refs/heads/master' }}
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.gettag.outputs.image }}
+        tags: latest ${{ steps.gettagver.outputs.tag }}
+        registry: quay.io/ebigxa
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_TOKEN }}
 
   deploy:
     needs: getchanges
