@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - master
-  pull_request
+  pull_request:
+    paths:
+      - "*/env.yaml"
+      - "*/image_tag"
+      - "*/post_install_dockerfile"
+      - "miniconda_template/*"
+      - ".github/workflows/miniconda_template.yaml"
 
 jobs:
   getchanges:
