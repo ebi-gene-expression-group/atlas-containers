@@ -40,6 +40,7 @@ jobs:
           echo ${{steps.changes.outputs.changeddirsjson}}
     outputs:
       changeddirs: ${{ steps.changes.outputs.changeddirsjson }}
+      all_changed_and_modified_files: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
 
 
   test:
@@ -54,6 +55,13 @@ jobs:
 
     - name: Check matrix
       run: echo ${{ matrix.changed }}
+
+    - name: Check that tag has been modified
+      run: |
+        if [[ ! "${{ needs.getchanges.outputs.all_changed_and_modified_files }}" == *"${{ matrix.changed }}/image_tag"* ]]; then
+          echo "Tag needs to be changed for container in ${{ matrix.changed }}"
+          exit 1
+        fi
 
     - name: Read image
       id: gettag
