@@ -2,18 +2,9 @@ name: Build and Push miniconda templated containers
 
 on:
   push:
-    # branches:
-    #  - master
-    paths:
-      - "*/env.yaml"
-      - "*/image_tag"
-      - "*/post_install_dockerfile"
-      - "miniconda_template/*"
-      - ".github/workflows/miniconda_template.yaml"
+    branches:
+      - master
   pull_request:
-    # branches:
-    #  - '*'
-    #  - '!master'
     paths:
       - "*/env.yaml"
       - "*/image_tag"
