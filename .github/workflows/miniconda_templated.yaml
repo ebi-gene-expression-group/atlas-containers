@@ -52,7 +52,7 @@ jobs:
 
 
   test:
-    name: Build image
+    name: Build image and optionally deploy
     runs-on: ubuntu-20.04
     needs: getchanges
     strategy:
@@ -96,47 +96,6 @@ jobs:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_TOKEN }}
 
-  deploy:
-    needs: getchanges
-    name: Build and deploy image to quay.io/ebigxa
-    runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/master'
-    strategy:
-      matrix:
-        changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Read image
-      id: gettag
-      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $1 }' )"
-
-    - name: Read tag
-      id: gettagver
-      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $2 }' )"
-
-    - name: Assemble Dockerfile
-      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
-
-    - name: Build image
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: ${{ steps.gettag.outputs.image }}
-        tags: latest ${{ steps.gettagver.outputs.tag }}
-        context: ${{ matrix.changed }}
-        dockerfiles: |
-          ./${{ matrix.changed }}/Dockerfile
-
-    - name: Push to Quay
-      id: push-to-quay
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.gettag.outputs.image }}
-        tags: latest ${{ steps.gettagver.outputs.tag }}
-        registry: quay.io/ebigxa
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_TOKEN }}
-
     - name: Use the image
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
