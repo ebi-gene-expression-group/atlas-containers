@@ -1,4 +1,4 @@
-name: atlas-analysis
+name: atlas-analysis-base
 channels:
   - defaults
   - conda-forge
