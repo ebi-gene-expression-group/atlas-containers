@@ -1,0 +1,14 @@
+name: atlas-analysis
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+  - ebi-gene-expression-group
+dependencies:
+  - perl-atlas-modules
+  - r-base
+  - bats-core
+  - r-atlas-internal
+  - bioconductor-biobase 
+  - bioconductor-genefilter
+  - bioconductor-limma
