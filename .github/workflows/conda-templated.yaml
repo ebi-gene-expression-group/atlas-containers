@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
     paths:
-      - "*/env.yaml"
+      - "*/templated-conda-env.yaml"
       - "*/image_tag"
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
@@ -32,7 +32,7 @@ jobs:
             tr ',' '\n' | \
             awk '{ if ( $0 ~ /\// ) { print $1 } }' | \
             awk -F'/' '{ print $1 }' | sort -u | \
-            awk 'system("test -f "$1"/env.yaml")==0 { print $1 }' | \
+            awk 'system("test -f "$1"/templated-conda-env.yaml")==0 { print $1 }' | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' )
           echo ::set-output name=changeddirsjson::"$CHANGED_DIRS_JSON"
       - name: Print changed directories with miniconda based containers
