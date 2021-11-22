@@ -1,0 +1,12 @@
+name: index-gxa
+channels:
+  - conda-forge
+  - ebi-gene-expression-group
+  - bioconda
+dependencies:
+  - bash
+  - curl
+  - jq
+  - pyyaml
+  - pandas
+  - atlas-web-bulk-cli

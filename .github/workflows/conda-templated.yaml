@@ -1,0 +1,100 @@
+name: Build and Push miniconda templated containers
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths:
+      - "*/templated-conda-env.yaml"
+      - "*/image_tag"
+      - "*/post_install_dockerfile"
+      - "miniconda_template/*"
+      - ".github/workflows/miniconda_template.yaml"
+
+jobs:
+  getchanges:
+    name: Get changed repos
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v11.5
+        with:
+          separator: ','
+      - name: Changed base directories for u-mamba based containers
+        id: changes
+        run: |
+          CHANGED_DIRS_JSON=$(echo ${{ steps.changed-files.outputs.all_changed_and_modified_files }} | \
+            tr ',' '\n' | \
+            awk '{ if ( $0 ~ /\// ) { print $1 } }' | \
+            awk -F'/' '{ print $1 }' | sort -u | \
+            awk 'system("test -f "$1"/templated-conda-env.yaml")==0 { print $1 }' | \
+            jq -R -s -c 'split("\n") | map(select(length > 0))' )
+          echo ::set-output name=changeddirsjson::"$CHANGED_DIRS_JSON"
+      - name: Print changed directories with miniconda based containers
+        run: |
+          echo ${{steps.changes.outputs.changeddirsjson}}
+    outputs:
+      changeddirs: ${{ steps.changes.outputs.changeddirsjson }}
+      all_changed_and_modified_files: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
+
+
+  test:
+    name: Build image and optionally deploy
+    runs-on: ubuntu-20.04
+    needs: getchanges
+    strategy:
+      matrix:
+        changed: ${{fromJSON(needs.getchanges.outputs.changeddirs)}}
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Check matrix
+      run: echo ${{ matrix.changed }}
+
+    - name: Check that tag has been modified
+      run: |
+        if [[ ! "${{ needs.getchanges.outputs.all_changed_and_modified_files }}" == *"${{ matrix.changed }}/image_tag"* ]]; then
+          echo "Tag needs to be changed for container in ${{ matrix.changed }}"
+          exit 1
+        fi
+
+    - name: Read image
+      id: gettag
+      run: echo "::set-output name=image::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $1 }' )"
+
+    - name: Read tag
+      id: gettagver
+      run: echo "::set-output name=tag::$(head -n 1 ${{ matrix.changed }}/image_tag | awk -F':' '{ print $2 }' )"
+
+    - name: Assemble Dockerfile
+      run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
+
+    - name: Build image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ steps.gettag.outputs.image }}
+        tags: latest ${{ steps.gettagver.outputs.tag }}
+        context: ${{ matrix.changed }}
+        dockerfiles: |
+          ./${{ matrix.changed }}/Dockerfile
+
+    - name: Push to Quay
+      if: ${{ github.ref == 'refs/heads/master' }}
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.gettag.outputs.image }}
+        tags: latest ${{ steps.gettagver.outputs.tag }}
+        registry: quay.io/ebigxa
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_TOKEN }}
+
+    - name: Use the image
+      if: ${{ github.ref == 'refs/heads/master' }}
+      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
