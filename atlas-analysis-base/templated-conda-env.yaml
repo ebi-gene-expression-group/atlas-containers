@@ -9,6 +9,8 @@ dependencies:
   - r-base
   - bats-core
   - r-atlas-internal
+  - r-reshape2
   - bioconductor-biobase 
   - bioconductor-genefilter
   - bioconductor-limma
+  - bioconductor-deseq2
