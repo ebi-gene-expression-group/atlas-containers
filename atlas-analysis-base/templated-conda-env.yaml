@@ -14,3 +14,10 @@ dependencies:
   - bioconductor-genefilter
   - bioconductor-limma
   - bioconductor-deseq2
+  - r-optparse
+  - r-bit
+  - r-ggplot2
+  - r-gplots
+  - r-rcolorbrewer
+  - bioconductor-clusterseq
+  - atlas-bash-util
