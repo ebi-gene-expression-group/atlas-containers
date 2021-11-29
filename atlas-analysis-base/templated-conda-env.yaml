@@ -20,3 +20,4 @@ dependencies:
   - r-gplots
   - r-rcolorbrewer
   - bioconductor-clusterseq
+  - atlas-bash-utils
