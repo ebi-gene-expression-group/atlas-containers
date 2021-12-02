@@ -9,4 +9,4 @@ dependencies:
   - jq
   - pyyaml
   - pandas
-  - atlas-web-bulk-cli =36.1.0
+  - atlas-web-bulk-cli =36.2.0
