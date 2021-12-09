@@ -1,0 +1,12 @@
+name: data-export-bulk-r-base
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+  - ebi-gene-expression-group
+dependencies:
+  - opentargets-validator
+  - coreutils
+  - jq
+  - curl
+  - gzip 
