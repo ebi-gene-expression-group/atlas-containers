@@ -1,0 +1,16 @@
+name: data-export-bulk-r-base
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+  - ebi-gene-expression-group
+dependencies:
+  - bioconductor-edaseq
+  - bioconductor-ruvseq
+  - bioconductor-s4vectors
+  - bioconductor-summarizedexperiment
+  - r-funr
+  - r-ggfortify
+  - r-ggplot2
+  - r-optparse
+  - r-rcolorbrewer
