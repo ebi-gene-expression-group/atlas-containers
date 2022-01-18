@@ -1,0 +1,11 @@
+name: atlas-anndata-base
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+  - ebi-gene-expression-group
+dependencies:
+  - scanpy
+  - pyyaml
+  - click
+  - jsonschema 
