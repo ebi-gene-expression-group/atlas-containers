@@ -17,4 +17,4 @@ dependencies:
   - postgresql
   - nodejs
   - bats
-  #- atlas-web-bulk-cli=36.4.0
+  - atlas-web-sc-cli=11.2
