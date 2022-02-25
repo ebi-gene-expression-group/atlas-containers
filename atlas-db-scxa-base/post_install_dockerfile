@@ -1,9 +1,8 @@
 USER root
-RUN wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.2/flyway-commandline-6.3.2-linux-x64.tar.gz | tar xvz && ln -s `pwd`/flyway-6.3.2/flyway /usr/local/bin
+RUN wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.2/flyway-commandline-6.3.2-linux-x64.tar.gz | tar xvz && ln -s `pwd`/flyway-6.3.2/flyway /opt/conda/envs/base/bin
 # needed since atlas-schemas will copy stuff there
 RUN chmod a+w /usr/local
-RUN chown micromamba /usr/local/bin/flyway
+RUN chown micromamba /opt/conda/envs/base/bin/flyway
 USER micromamba
 
 ENV CONDA_PREFIX "/opt/conda"
-ENV PATH "/bin:/sbin:/usr/bin:/usr/local/bin:/opt/conda/bin"
