@@ -1,0 +1,20 @@
+name: index-gxa
+channels:
+  - conda-forge
+  - ebi-gene-expression-group
+  - bioconda
+dependencies:
+  - bash
+  - coreutils
+  - curl
+  - wget
+  - jq
+  - r-base
+  - r-tidyr
+  - r-optparse
+  - r-matrix
+  - r-data.table
+  - postgresql
+  - nodejs
+  - bats
+  - atlas-web-sc-cli=11.2
