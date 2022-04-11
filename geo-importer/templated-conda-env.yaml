@@ -1,13 +1,13 @@
-name: web-cli
+name: base
 channels:
   - conda-forge
   - bioconda
   - ebi-gene-expression-group
 dependencies:
-  - perl-atlas-modules
+  - perl-atlas-modules==0.3.1
   - magetab-curation-scripts
-  - atlas-bash-util
-  - perl-go-perl
+  - perl-capture-tiny
   - perl-config-tiny
   - perl-xml-parser
-  - perl-bioperl
+  - pandas
+  - requests
