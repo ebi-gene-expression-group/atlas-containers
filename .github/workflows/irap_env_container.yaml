@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "atlas-irap/Dockerfile"
-      - "atlas-irap/image_tag"
+      - "atlas-irap/tag"
       - ".github/workflows/irap_env_container.yaml"
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
     - name: Read tag
       id: gettag
-      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/image_tag )"
+      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/tag )"
 
     - name: Build image
       id: build-image
@@ -43,7 +43,7 @@ jobs:
 
     - name: Read tag
       id: gettag
-      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/image_tag )"
+      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/tag )"
 
     - name: Build image
       id: build-image
