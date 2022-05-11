@@ -22,7 +22,7 @@ jobs:
 
     - name: Read tag
       id: gettag
-      run: echo echo "::set-output name=tag::$(head -n 1 github-actions-runner/Dockerfile | awk -F':' '{print $2}'
+      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/image_tag | awk -F':' '{print $2}'
 
     - name: Build image
       id: build-image
@@ -37,15 +37,14 @@ jobs:
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: atlas-irap-env
+      IMAGE_NAME: atlas-irap
 
-    if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v2
 
     - name: Read tag
       id: gettag
-      run: echo echo "::set-output name=tag::$(head -n 1 github-actions-runner/Dockerfile | awk -F':' '{print $2}'
+      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/image_tag | awk -F':' '{print $2}'
 
     - name: Build image
       id: build-image
@@ -67,4 +66,4 @@ jobs:
         password: ${{ secrets.QUAY_TOKEN }}
 
     - name: Use the image
-      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}" 
+      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
