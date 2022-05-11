@@ -2,8 +2,10 @@ name: Build and Push atlas-irap-env container
 
 on:
   push:
-    branches:
-      - master
+    paths:
+      - "atlas-irap/Dockerfile"
+      - "atlas-irap/image_tag"
+      - ".github/workflows/irap_env_container.yaml"
   pull_request:
     paths:
       - "atlas-irap/Dockerfile"
@@ -12,7 +14,7 @@ on:
 
 jobs:
   test:
-    name: Build image
+    name: Test build
     runs-on: ubuntu-20.04
     env:
       IMAGE_NAME: atlas-irap
