@@ -1,0 +1,67 @@
+name: Build and Push atlas-irap-env container
+
+on:
+  push:
+    paths:
+      - "atlas-irap/Dockerfile"
+      - "atlas-irap/image_tag"
+      - ".github/workflows/irap_env_container.yaml"
+
+jobs:
+  test:
+    name: Build image
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: atlas-irap
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Read tag
+      id: gettag
+      run: echo echo "::set-output name=tag::$(head -n 1 github-actions-runner/Dockerfile | awk -F':' '{print $2}'
+
+    - name: Build image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.IMAGE_NAME }}
+        tags: ${{ steps.gettag.outputs.tag }}
+        containerfiles: |
+          ./atlas-irap/Dockerfile
+          
+  deploy:
+    name: Build and deploy image to quay.io/ebigxa
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: atlas-irap-env
+
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Read tag
+      id: gettag
+      run: echo echo "::set-output name=tag::$(head -n 1 github-actions-runner/Dockerfile | awk -F':' '{print $2}'
+
+    - name: Build image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.IMAGE_NAME }}
+        tags: ${{ steps.gettag.outputs.tag }}
+        containerfiles: |
+          ./atlas-irap/Dockerfile
+    
+    - name: Push to Quay
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: quay.io/ebigxa
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_TOKEN }}
+
+    - name: Use the image
+      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}" 
