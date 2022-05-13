@@ -22,7 +22,7 @@ jobs:
 
     - name: Read tag
       id: gettag
-      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/tag | awk -F':' '{print $2}')"
+      run: echo "::set-output name=tag::$(head -n 1 irap-fedora/tag | awk -F':' '{print $2}')"
 
     - name: Build image
       id: build-image
@@ -44,7 +44,7 @@ jobs:
 
     - name: Read tag
       id: gettag
-      run: echo "::set-output name=tag::$(head -n 1 atlas-irap/tag | awk -F':' '{print $2}')"
+      run: echo "::set-output name=tag::$(head -n 1 irap-fedora/tag | awk -F':' '{print $2}')"
 
     - name: Build image
       id: build-image
