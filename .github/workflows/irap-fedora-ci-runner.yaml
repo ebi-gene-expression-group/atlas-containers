@@ -5,10 +5,10 @@ on:
     branches: 
       - master
     paths:
-      - "atlas-irap/**"
+      - "irap-fedora/**"
   pull_request:
     paths:
-      - "atlas-irap/**"
+      - "irap-fedora/**"
 
 jobs:
   test:
