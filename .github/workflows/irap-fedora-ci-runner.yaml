@@ -31,7 +31,7 @@ jobs:
         image: ${{ env.IMAGE_NAME }}
         tags: ${{ steps.gettag.outputs.tag }}
         containerfiles: |
-          ./atlas-irap/Dockerfile
+          ./irap-fedora/Dockerfile
           
   # deploy:
   #   name: Build and deploy image to quay.io/ebigxa
@@ -53,7 +53,7 @@ jobs:
   #       image: ${{ env.IMAGE_NAME }}
   #       tags: ${{ steps.gettag.outputs.tag }}
   #       containerfiles: |
-  #         ./atlas-irap/Dockerfile
+  #         ./irap-fedora/Dockerfile
     
   #   - name: Push to Quay
   #     id: push-to-quay
