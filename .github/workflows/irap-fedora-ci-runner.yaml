@@ -15,7 +15,7 @@ jobs:
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: atlas-irap
+      IMAGE_NAME: irap_fedora
 
     steps:
     - uses: actions/checkout@v2
