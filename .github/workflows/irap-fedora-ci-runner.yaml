@@ -10,29 +10,7 @@ on:
     paths:
       - "irap-fedora/**"
 
-jobs:
-  test:
-    name: Test build
-    runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: atlas-irap
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Read tag
-      id: gettag
-      run: echo "::set-output name=tag::$(head -n 1 irap-fedora/tag | awk -F':' '{print $2}')"
-
-    - name: Build image
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: ${{ env.IMAGE_NAME }}
-        tags: ${{ steps.gettag.outputs.tag }}
-        containerfiles: |
-          ./irap-fedora/Dockerfile
-          
+jobs:          
   deploy:
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
@@ -67,4 +45,5 @@ jobs:
         password: ${{ secrets.QUAY_TOKEN }}
 
     - name: Use the image
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
