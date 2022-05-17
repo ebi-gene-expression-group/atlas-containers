@@ -3,5 +3,5 @@ FROM nunofonseca/irap_fedora:v1.0.3
 # Install time
 RUN yum -y update && yum -y install time
 
-# Install libtbb.so.2
-RUN yum -y install tbb
+# Add libtbb.so.2 to LD_LIBRARY_PATH
+RUN export LD_LIBRARY_PATH=/opt/irap/bin/salmon/lib:$LD_LIBRARY_PATH
