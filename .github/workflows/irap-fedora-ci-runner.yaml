@@ -15,7 +15,7 @@ jobs:
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: irap_fedora
+      IMAGE_NAME: echo "$(head -n 1 irap-fedora/tag | awk -F':' '{print $1}')"
 
     steps:
     - uses: actions/checkout@v2
