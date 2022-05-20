@@ -35,17 +35,17 @@ jobs:
         containerfiles: |
           ./irap-fedora/Dockerfile
     
-    - name: Push to Quay
-      if: ${{ github.ref == 'refs/heads/master' }}
-      id: push-to-quay
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: quay.io/ebigxa
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_TOKEN }}
+    # - name: Push to Quay
+    #   if: ${{ github.ref == 'refs/heads/master' }}
+    #   id: push-to-quay
+    #   uses: redhat-actions/push-to-registry@v2
+    #   with:
+    #     image: ${{ steps.build-image.outputs.image }}
+    #     tags: ${{ steps.build-image.outputs.tags }}
+    #     registry: quay.io/ebigxa
+    #     username: ${{ secrets.QUAY_USERNAME }}
+    #     password: ${{ secrets.QUAY_TOKEN }}
 
-    - name: Use the image
-      if: ${{ github.ref == 'refs/heads/master' }}
-      run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
+    # - name: Use the image
+    #   if: ${{ github.ref == 'refs/heads/master' }}
+    #   run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
