@@ -14,11 +14,13 @@ jobs:
   deploy:
     name: Build and deploy image to quay.io/ebigxa
     runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: echo "$(head -n 1 irap-fedora/tag | awk -F':' '{print $1}')"
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Read image name
+      id: getimagename
+      run: echo "::set-output name=imagename::$(head -n 1 irap-fedora/tag | awk -F':' '{print $1}')"
 
     - name: Read tag
       id: gettag
@@ -28,7 +30,7 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ env.IMAGE_NAME }}
+        image: ${{ steps.getimagename.outputs.imagename }}
         tags: ${{ steps.gettag.outputs.tag }}
         containerfiles: |
           ./irap-fedora/Dockerfile
