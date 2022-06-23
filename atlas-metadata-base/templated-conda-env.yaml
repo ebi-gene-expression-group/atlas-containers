@@ -8,3 +8,4 @@ dependencies:
   - coreutils
   - jq
   - curl
+  - parallel
