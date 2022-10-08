@@ -1,4 +1,4 @@
-FROM quay.io/evryfs/github-actions-runner:ubuntu20-20211214.2
+FROM quay.io/evryfs/github-actions-runner:master
 
 USER root
 RUN sudo apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com && \
