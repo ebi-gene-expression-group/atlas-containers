@@ -36,7 +36,7 @@ jobs:
             [2]: https://github.com/peter-evans/create-pull-request
           labels: dependencies, automated pr
           branch: actions-runner-updates
-          reviewers: pinin4fjords,pcm32
+          reviewers: pmb59,anilthanki,irisdianauy
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
