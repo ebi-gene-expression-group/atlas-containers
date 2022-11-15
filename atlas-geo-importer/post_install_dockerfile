@@ -1,0 +1,6 @@
+
+USER root
+
+RUN cpanm Capture::Tiny
+
+RUN cpanm LWP::UserAgent::ProxyAny
