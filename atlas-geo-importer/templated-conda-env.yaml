@@ -4,10 +4,10 @@ channels:
   - ebi-gene-expression-group
   - bioconda
 dependencies:
-  - perl-atlas-modules=0.3.1=h589c0e0_0
   - magetab-curation-scripts
   - perl-config-tiny
   - perl-xml-parser
+  - perl-atlas-modules=0.3.1
   - pandas
   - requests
   
