@@ -1,0 +1,14 @@
+name: geo-importer
+channels:
+  - conda-forge
+  - ebi-gene-expression-group
+  - bioconda
+dependencies:
+  - magetab-curation-scripts
+  - perl-config-tiny
+  - perl-xml-parser
+  - perl-atlas-modules=0.3.1
+  - pandas
+  - requests
+  - perl-app-cpanminus
+  

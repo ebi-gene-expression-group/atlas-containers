@@ -1,0 +1,6 @@
+
+USER root
+
+RUN cpanm Capture::Tiny
+
+USER micromamba
