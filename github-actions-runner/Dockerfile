@@ -8,7 +8,7 @@ RUN sudo apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com && \
     rm -rf /var/cache/apt /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Update latest runner
-ARG RUNNER_VERSION=2.300.0
+ARG RUNNER_VERSION=2.300.2
 RUN curl -sL "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" | tar xzvC /home/runner && \
     /home/runner/bin/installdependencies.sh
 
