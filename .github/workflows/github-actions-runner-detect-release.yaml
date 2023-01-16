@@ -15,7 +15,7 @@ jobs:
         id: getversion
         run: echo "::set-output name=version::$(grep 'ARG RUNNER_VERSION' github-actions-runner/Dockerfile | awk -F'=' '{print $2}')"
       - name: Update runner in container
-        if: steps.getrelease.outputs.release_tag != steps.getversion.outputs.version
+        if: steps.getrelease.outputs.release_tag != steps.getversion.outputs.version && steps.getrelease.outputs.release_tag != 'null'
         env:
           RELEASE_NO: ${{ steps.getrelease.outputs.release_tag }}
           CURRENT_VERSION: ${{ steps.getversion.outputs.version }}
