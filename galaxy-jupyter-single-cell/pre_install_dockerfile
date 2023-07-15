@@ -2,5 +2,5 @@
 FROM quay.io/bgruening/docker-jupyter-notebook:2021-03-05
 
 COPY templated-conda-env.yaml /tmp/env.yaml
-RUN mamba install -y -n base -f /tmp/env.yaml && \
+RUN mamba install -y -n base --file /tmp/env.yaml && \
     mamba clean --all --yes
