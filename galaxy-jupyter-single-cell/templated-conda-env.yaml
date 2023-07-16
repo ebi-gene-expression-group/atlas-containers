@@ -15,6 +15,7 @@ dependencies:
   - bioconductor-limma
   - bioconductor-rtracklayer
   - r-monocle3
+  - scvi-tools
   - decoupler
   - curl
   - wget
