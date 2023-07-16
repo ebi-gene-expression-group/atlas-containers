@@ -15,7 +15,7 @@ dependencies:
   - bioconductor-limma
   - bioconductor-rtracklayer
   - r-monocle3
-  - scvi-tools
+  # - scvi-tools -- makes github actions VM run out of disk space.
   - decoupler
   - curl
   - wget
