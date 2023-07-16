@@ -1,6 +1,8 @@
 # uses the same image as the original interactive environment in Galaxy
 FROM quay.io/bgruening/docker-jupyter-notebook:2021-03-05
 
+# install micromamba
+RUN "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
 COPY templated-conda-env.yaml /tmp/env.yaml
-RUN mamba install -y -n base --file /tmp/env.yaml && \
-    mamba clean --all --yes
+RUN micromamba install -y -n base -f /tmp/env.yaml && \
+    micromamba clean --all --yes
