@@ -6,9 +6,9 @@ channels:
 dependencies:
   - scanpy==1.9.3
   - r-seurat==4.3.0
-  - r-seuratdisk
+  # - r-seuratdisk - conflicts with newer r-base required for Seurat.
   - r-monocle3
-  - r-sceasy
+  # - r-sceasy - conflicts with newer Scanpy and Seurat
   - r-ggplot2
   - r-data.table
   - r-stringr
