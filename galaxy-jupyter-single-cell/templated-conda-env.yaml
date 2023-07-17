@@ -6,12 +6,15 @@ channels:
 dependencies:
   - scanpy==1.9.3
   - r-seurat==4.3.0
+  - r-seuratdisk
+  - r-monocle3
+  - r-sceasy
   - r-ggplot2
   - r-data.table
   - r-stringr
   - r-pheatmap
   - bioconductor-deseq2
   - bioconductor-fgsea
-  - r-monocle3
+  - r-complexupset
   # - scvi-tools -- makes github actions VM run out of disk space.
   - decoupler
