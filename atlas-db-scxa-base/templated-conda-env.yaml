@@ -17,4 +17,4 @@ dependencies:
   - postgresql
   - nodejs
   - bats
-  - atlas-web-sc-cli=11.2
+  - atlas-web-sc-cli=v13.0.0
