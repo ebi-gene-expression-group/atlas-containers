@@ -75,6 +75,11 @@ jobs:
     - name: Assemble Dockerfile
       run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
 
+    - name: Free up some space for building large images
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
     - name: Build image
       id: build-image
       uses: redhat-actions/buildah-build@v2
