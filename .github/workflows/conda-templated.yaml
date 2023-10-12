@@ -8,6 +8,7 @@ on:
     paths:
       - "*/templated-conda-env.yaml"
       - "*/image_tag"
+      - "*/pre_install_dockerfile"
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"

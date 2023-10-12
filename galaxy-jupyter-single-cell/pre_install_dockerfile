@@ -4,5 +4,6 @@ FROM quay.io/bgruening/docker-jupyter-notebook:2021-03-05
 # install micromamba
 RUN "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
 COPY templated-conda-env.yaml /tmp/env.yaml
+RUN ls /tmp/env.yaml
 RUN /home/jovyan/.local/bin/micromamba install -y -n base -f /tmp/env.yaml && \
     /home/jovyan/.local/bin/micromamba clean --all --yes
