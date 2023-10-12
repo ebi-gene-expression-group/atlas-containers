@@ -15,7 +15,7 @@ on:
 jobs:
   getchanges:
     name: Get changed repos
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -45,7 +45,7 @@ jobs:
 
   test:
     name: Build image and optionally deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: getchanges
     strategy:
       matrix:
