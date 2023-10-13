@@ -8,6 +8,7 @@ on:
     paths:
       - "*/templated-conda-env.yaml"
       - "*/image_tag"
+      - "*/pre_install_dockerfile"
       - "*/post_install_dockerfile"
       - "miniconda_template/*"
       - ".github/workflows/miniconda_template.yaml"
@@ -15,7 +16,7 @@ on:
 jobs:
   getchanges:
     name: Get changed repos
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -45,7 +46,7 @@ jobs:
 
   test:
     name: Build image and optionally deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: getchanges
     strategy:
       matrix:
@@ -73,6 +74,11 @@ jobs:
 
     - name: Assemble Dockerfile
       run: miniconda_template/create_dockerfile.sh ${{ matrix.changed }}
+
+    - name: Free up some space for building large images
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
     - name: Build image
       id: build-image

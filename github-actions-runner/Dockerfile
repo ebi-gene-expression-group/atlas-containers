@@ -1,4 +1,5 @@
-FROM quay.io/evryfs/github-actions-runner:master
+FROM quay.io/evryfs/github-actions-runner:latest
+# based on
 
 USER root
 RUN sudo apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com && \

@@ -1,5 +1,5 @@
-# uses the same image as the original interactive environment in Galaxy
 FROM quay.io/bgruening/docker-jupyter-notebook:2021-03-05
+# uses the same image as the original interactive environment in Galaxy
 
 # install micromamba
 RUN "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
