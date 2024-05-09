@@ -24,6 +24,8 @@ inside the new directory for the container includes:
 
 The Dockerfile will then be dynamically created by the CI in `conda-templated.yaml` based on the above.
 
+# VERY IMPORTANT FOR NEW CONTAINERS (BEFORE MERGING)
+
 Before merging into master, make sure that the container project exists within the `ebigxa` organization in [quay.io](https://quay.io/organization/ebigxa). If it doesn't, create an **empty** repository with the appropiate name (see the image_tag file) by clicking on `+ Create new repository` and selecting empty as the type of project and making sure it is public. Then go to the [robot config](https://quay.io/organization/ebigxa?tab=robots) and make sure that ebigxa+atlas_containers has write access on that repository (by clicking the `n repositories` row for that entry.)
 
 This is mostly meant for containers that are "environment" containers, where the script/execution logic of specific processes will be mounted.
