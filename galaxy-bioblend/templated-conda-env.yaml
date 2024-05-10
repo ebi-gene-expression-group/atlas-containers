@@ -8,3 +8,4 @@ dependencies:
   - csvkit
   - boto3
   - pytz
+  - git
