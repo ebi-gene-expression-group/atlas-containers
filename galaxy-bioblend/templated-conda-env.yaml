@@ -9,3 +9,4 @@ dependencies:
   - boto3
   - pytz
   - git
+  - pyyaml
