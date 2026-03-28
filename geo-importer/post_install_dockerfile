@@ -1,0 +1,3 @@
+ARG MAMBA_DOCKERFILE_ACTIVATE=1
+RUN sed -i '/ProxyAny/d' /opt/conda/atlasprod/perl_modules/EBI/FGPT/Converter/GEO/GeoExperiment.pm
+
