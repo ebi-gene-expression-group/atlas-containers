@@ -1,10 +1,10 @@
 USER root
 WORKDIR /opt
-RUN wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.2/flyway-commandline-6.3.2-linux-x64.tar.gz | tar xvz && ln -s `pwd`/flyway-6.3.2/flyway /opt/conda/bin
+RUN wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.0.0/flyway-commandline-7.0.0-linux-x64.tar.gz | tar xvz && ln -s `pwd`/flyway-7.0.0/flyway /opt/conda/bin
 # needed since atlas-schemas will copy stuff there
 RUN chmod a+w /usr/local
 RUN chown micromamba /opt/conda/bin/flyway
-RUN chmod a+x /opt/flyway-6.3.2/flyway
+RUN chmod a+x /opt/flyway-7.0.0/flyway
 WORKDIR /tmp
 USER micromamba
 
