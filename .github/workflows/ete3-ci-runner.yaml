@@ -1,3 +1,5 @@
+name: Build and Push ete3 container
+
 on:
   push:
     branches:
