@@ -6,9 +6,11 @@ on:
       - master
     paths:
       - "ete3/**"
+      - ".github/workflows/ete3-ci-runner.yaml"
   pull_request:
     paths:
       - "ete3/**"
+      - ".github/workflows/ete3-ci-runner.yaml"
 
 jobs:
   deploy:
