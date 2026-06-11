@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "ete3/**"
+  pull_request:
+    paths:
+      - "ete3/**"
+
+jobs:
+  deploy:
+    name: Build and deploy image to quay.io/ebigxa
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read image name
+        id: getimagename
+        run: |
+          line="$(head -n 1 ete3/tag)"
+          echo "imagename=${line%%:*}" >> "$GITHUB_OUTPUT"
+
+      - name: Read tag
+        id: gettag
+        run: |
+          line="$(head -n 1 ete3/tag)"
+          echo "tag=${line#*:}" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ steps.getimagename.outputs.imagename }}
+          tags: ${{ steps.gettag.outputs.tag }}
+          containerfiles: |
+            ./ete3/Dockerfile
+
+      - name: Push to Quay
+        if: ${{ github.ref == 'refs/heads/master' }}
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/ebigxa
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Use the image
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: echo "New image has been pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
